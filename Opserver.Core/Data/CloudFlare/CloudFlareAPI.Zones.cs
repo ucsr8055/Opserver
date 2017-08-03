@@ -40,8 +40,7 @@ namespace StackExchange.Opserver.Data.CloudFlare
 
         public CloudFlareZone GetZoneFromUrl(string url)
         {
-            Uri uri;
-            return !Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri) ? null : GetZoneFromHost(uri.Host);
+            return !Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri uri) ? null : GetZoneFromHost(uri.Host);
         }
 
         /// <summary>

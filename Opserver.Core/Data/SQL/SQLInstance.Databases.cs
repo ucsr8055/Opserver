@@ -1,9 +1,9 @@
 ﻿using Dapper;
+using EnumsNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnconstrainedMelody;
 
 namespace StackExchange.Opserver.Data.SQL
 {
@@ -45,14 +45,9 @@ namespace StackExchange.Opserver.Data.SQL
 
                         foreach (var db in dbs)
                         {
-                            List<DatabaseLastBackup> b;
-                            db.Backups = backupLookup.TryGetValue(db.Id, out b) ? b : new List<DatabaseLastBackup>();
-
-                            List<DatabaseFile> f;
-                            db.Files = fileLookup.TryGetValue(db.Id, out f) ? f : new List<DatabaseFile>();
-
-                            DatabaseVLF v;
-                            db.VLFCount = vlfsLookup.TryGetValue(db.Id, out v) ? v?.VLFCount : null;
+                            db.Backups = backupLookup.TryGetValue(db.Id, out List<DatabaseLastBackup> b) ? b : new List<DatabaseLastBackup>();
+                            db.Files = fileLookup.TryGetValue(db.Id, out List<DatabaseFile> f) ? f : new List<DatabaseFile>();
+                            db.VLFCount = vlfsLookup.TryGetValue(db.Id, out DatabaseVLF v) ? v?.VLFCount : null;
                         }
                     }
                     return dbs;
@@ -124,7 +119,7 @@ namespace StackExchange.Opserver.Data.SQL
                 {
                     if (IsReadOnly) return "Read-only";
                     // TODO: Other statuses, e.g. Not Synchronizing
-                    return State.GetDescription();
+                    return State.AsString(EnumFormat.Description);
                 }
             }
 
@@ -166,7 +161,7 @@ namespace StackExchange.Opserver.Data.SQL
                         case DatabaseStates.Online:
                             return null;
                         default:
-                            return Name + " database is " + State.GetDescription();
+                            return Name + " database is " + State.AsString(EnumFormat.Description);
                     }
                 }
             }
@@ -1060,9 +1055,8 @@ Order By 1, 2, 3";
                 get
                 {
                     if (RangeValue == null) return string.Empty;
-                    if (RangeValue is DateTime)
+                    if (RangeValue is DateTime date)
                     {
-                        var date = (DateTime)RangeValue;
                         return date.ToString(date.TimeOfDay.Ticks == 0 ? "yyyy-MM-dd" : "u");
                     }
                     return RangeValue.ToString();

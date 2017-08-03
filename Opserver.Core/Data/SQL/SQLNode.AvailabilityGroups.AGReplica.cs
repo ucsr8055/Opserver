@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EnumsNET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using UnconstrainedMelody;
 
 namespace StackExchange.Opserver.Data.SQL
 {
@@ -96,7 +96,7 @@ namespace StackExchange.Opserver.Data.SQL
                     {
                         if (SynchronizationHealth == SynchronizationHealths.Healthy)
                             return null;
-                        return "Sync health: " + SynchronizationHealth.Value.GetDescription();
+                        return "Sync health: " + SynchronizationHealth.Value.AsString(EnumFormat.Description);
                     }
                     return Databases.GetReasonSummary();
                 }

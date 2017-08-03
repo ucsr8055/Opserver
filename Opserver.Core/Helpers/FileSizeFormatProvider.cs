@@ -18,25 +18,33 @@ namespace StackExchange.Opserver.Helpers
 
         public string Format(string format, object arg, IFormatProvider formatProvider)
         {
+            string defaultFormat()
+            {
+                if (arg is IFormattable formattableArg)
+                {
+                    return formattableArg.ToString(format, formatProvider);
+                }
+                return arg.ToString();
+            }
+
             if (format == null || !format.StartsWith(fileSizeFormat))
             {
-                return defaultFormat(format, arg, formatProvider);
+                return defaultFormat();
             }
 
             if (arg is string)
             {
-                return defaultFormat(format, arg, formatProvider);
+                return defaultFormat();
             }
 
             decimal size;
-
             try
             {
                 size = Convert.ToDecimal(arg);
             }
             catch (InvalidCastException)
             {
-                return defaultFormat(format, arg, formatProvider);
+                return defaultFormat();
             }
 
             string suffix;
@@ -63,16 +71,6 @@ namespace StackExchange.Opserver.Helpers
             string precision = format.Substring(2);
             if (precision.IsNullOrEmpty()) precision = "2";
             return string.Format("{0:N" + precision + "}{1}", size, suffix);
-        }
-
-        private static string defaultFormat(string format, object arg, IFormatProvider formatProvider)
-        {
-            IFormattable formattableArg = arg as IFormattable;
-            if (formattableArg != null)
-            {
-                return formattableArg.ToString(format, formatProvider);
-            }
-            return arg.ToString();
         }
     }
 }

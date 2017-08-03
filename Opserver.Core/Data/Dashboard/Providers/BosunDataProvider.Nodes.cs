@@ -41,7 +41,6 @@ namespace StackExchange.Opserver.Data.Dashboard.Providers
                     if (h.Name == "unspecified")
                         continue;
 
-                    Version kernelVersion;
                     // Note: we can't follow this pattern, we'll need to refresh existing nodes 
                     // not wholesale replace on poll
                     var n = new Node
@@ -61,7 +60,7 @@ namespace StackExchange.Opserver.Data.Dashboard.Providers
                         ServiceTag = h.SerialNumber,
                         MachineType = h.OS?.Caption,
                         MachineOSVersion = h.OS?.Version,
-                        KernelVersion = Version.TryParse(h.OS?.Version, out kernelVersion) ? kernelVersion : null,
+                        KernelVersion = Version.TryParse(h.OS?.Version, out Version kernelVersion) ? kernelVersion : null,
 
                         Interfaces = h.Interfaces?.Select(hi => new Interface
                         {
@@ -74,8 +73,7 @@ namespace StackExchange.Opserver.Data.Dashboard.Providers
                             PhysicalAddress = hi.Value.MAC,
                             IPs = hi.Value?.IPAddresses?.Select(ip =>
                             {
-                                IPNet result;
-                                return IPNet.TryParse(ip, out result) ? result : null;
+                                return IPNet.TryParse(ip, out IPNet result) ? result : null;
                             }).Where(ip => ip != null).ToList() ?? new List<IPNet>(),
                             LastSync = hi.Value.StatsLastUpdated,
                             InBps = hi.Value.Inbps,

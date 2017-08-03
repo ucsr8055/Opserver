@@ -98,8 +98,7 @@ namespace StackExchange.Opserver.Data.HAProxy
             get
             {
                 if (_niceName != null) return _niceName;
-                string result;
-                return _niceName = Current.Settings.HAProxy.Aliases.TryGetValue(Name, out result)
+                return _niceName = Current.Settings.HAProxy.Aliases.TryGetValue(Name, out string result)
                     ? result
                     : Name;
             }

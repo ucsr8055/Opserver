@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Jil;
-using UnconstrainedMelody;
+using EnumsNET;
 
 namespace StackExchange.Opserver.Data.PagerDuty
 {
@@ -110,7 +110,7 @@ namespace StackExchange.Opserver.Data.PagerDuty
             }
         }
 
-        public string MonitorStatusReason => "Status is " + Status.GetDescription();
+        public string MonitorStatusReason => "Status is " + Status.AsString(EnumFormat.Description);
     }
 
     public class Acknowledgement

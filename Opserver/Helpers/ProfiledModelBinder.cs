@@ -24,9 +24,8 @@ namespace StackExchange.Opserver.Helpers
                     ValueProviderResult valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
                     object result = valueProviderResult?.RawValue;
                     if (result == null) return null;
-                    var arr = result as Array;
 
-                    if (arr != null && !modelType.IsArray && arr.Length == 1)
+                    if (result is Array arr && !modelType.IsArray && arr.Length == 1)
                     {
                         result = arr.GetValue(0);
                     }
@@ -34,8 +33,7 @@ namespace StackExchange.Opserver.Helpers
                         return result;
 
                     var underlyingType = Nullable.GetUnderlyingType(modelType) ?? modelType;
-                    var s = result as string;
-                    if (s != null)
+                    if (result is string s)
                     {
                         try
                         {

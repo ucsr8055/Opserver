@@ -25,8 +25,7 @@ namespace StackExchange.Opserver.Data.Elastic
                 {
                     foreach (var s in stats.Nodes)
                     {
-                        NodeInfo node;
-                        if (result.RawNodes.TryGetValue(s.Key, out node))
+                        if (result.RawNodes.TryGetValue(s.Key, out NodeInfo node))
                         {
                             node.Stats = s.Value;
                         }
@@ -87,8 +86,7 @@ namespace StackExchange.Opserver.Data.Elastic
 
             private string GetAttribute(string key)
             {
-                string val;
-                return Attributes != null && Attributes.TryGetValue(key, out val) ? val : null;
+                return Attributes != null && Attributes.TryGetValue(key, out string val) ? val : null;
             }
 
             public string GUID { get; internal set; }
